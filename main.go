@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"math/rand"
 )
 
 func main() {
-	fmt.Println("hello world")
-	fmt.Println("The time now is:", time.Now())
+	rand.Seed(10)
+	fmt.Println("Random num", rand.Intn(10))
+	fmt.Println("Random num", rand.Intn(10))
+
+	fmt.Println("Random num after seed", rand.Intn(10))
 }
