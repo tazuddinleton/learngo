@@ -12,7 +12,25 @@ type Logger struct {
 
 func main() {
 
-	runLogExample()
+	f := fibonacci()
+
+	for i := 0; i < 10; i++ {
+		fmt.Println(f())
+	}
+}
+
+func fibonacci() func() int {
+	fib := []int{0}
+	return func() int {
+		if len(fib) == 1 {
+			fib = append(fib, 1)
+			return 0
+		}
+
+		val := fib[len(fib)-1]
+		fib = append(fib, fib[len(fib)-1]+fib[len(fib)-2])
+		return val
+	}
 }
 
 func runLogExample() {
