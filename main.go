@@ -22,13 +22,14 @@ func main() {
 func fibonacci() func() int {
 	fib := []int{0}
 	return func() int {
-		if len(fib) == 1 {
+		l := len(fib)
+		if l == 1 {
 			fib = append(fib, 1)
 			return 0
 		}
 
-		val := fib[len(fib)-1]
-		fib = append(fib, fib[len(fib)-1]+fib[len(fib)-2])
+		val := fib[l-1]
+		fib = append(fib, fib[l-1]+fib[l-2])
 		return val
 	}
 }
