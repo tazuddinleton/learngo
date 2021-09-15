@@ -10,9 +10,10 @@ func main() {
 }
 
 func runSelectExample() {
-	lim := 10
+	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	odd, even := make(chan int), make(chan int)
-	go numberPicker(lim, odd, even)
+
+	go numberPicker(nums, odd, even)
 
 	for {
 		select {
@@ -34,11 +35,11 @@ func runSelectExample() {
 	}
 }
 
-func numberPicker(lim int, odd chan int, even chan int) {
+func numberPicker(nums []int, odd chan int, even chan int) {
 	defer close(odd)
 	defer close(even)
 
-	for i := 1; i <= lim; i++ {
+	for i := 1; i <= len(nums); i++ {
 		if i%2 == 0 {
 			even <- i
 		} else {
