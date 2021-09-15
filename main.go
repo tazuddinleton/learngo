@@ -2,11 +2,134 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"learngo/tree"
+	"net/http"
+	"sync"
 	"time"
+
+	"mvdan.cc/xurls/v2"
 )
 
 func main() {
-	runSelectExample()
+	webCrawlerWithMutex()
+}
+
+func webCrawlerWithMutex() {
+	Crawl("https://golang.org/", 4, UrlFetcher{
+		mu:      sync.Mutex{},
+		visited: map[string]*FetchResult{},
+	})
+}
+
+type Fetcher interface {
+	Fetch(url string) (body string, urls []string, err error)
+}
+
+func Crawl(url string, depth int, fetcher Fetcher) {
+	if depth <= 0 {
+		return
+	}
+
+	_, urls, err := fetcher.Fetch(url)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("found: %s \n", url)
+
+	for _, u := range urls {
+		Crawl(u, depth-1, fetcher)
+	}
+	return
+}
+
+type UrlFetcher struct {
+	mu      sync.Mutex
+	visited map[string]*FetchResult
+}
+type FetchResult struct {
+	body string
+	urls []string
+}
+
+func (f UrlFetcher) Fetch(url string) (body string, urls []string, err error) {
+	f.mu.Lock()
+	_, ok := f.visited[url]
+	f.mu.Unlock()
+	if ok {
+		return
+	}
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	body = string(b)
+	resp.Body.Close()
+
+	xurls := xurls.Strict()
+	urls = xurls.FindAllString(body, -1)
+
+	f.mu.Lock()
+	f.visited[url] = &FetchResult{body: body, urls: urls}
+	f.mu.Unlock()
+	return
+}
+
+//
+//
+
+// todo: fix channel closing issue
+func binTreeExample() {
+	t := tree.New(1)
+	ch := make(chan int)
+	go Walk(t, ch)
+	for v := range ch {
+		fmt.Println(v)
+	}
+}
+
+func Walk(t *tree.Tree, ch chan int) {
+
+	if t.Left != nil {
+		Walk(t.Left, ch)
+	}
+	ch <- t.Value
+	if t.Right != nil {
+		Walk(t.Right, ch)
+	}
+}
+
+// Same determines whether the trees
+// t1 and t2 contain the same values.
+func Same(t1, t2 *tree.Tree) bool {
+	s1 := Collect(t1)
+	s2 := Collect(t2)
+	return s1 == s2
+}
+func Collect(t *tree.Tree) string {
+	ch := make(chan int)
+	s := ""
+	Walk(t, ch)
+
+	for {
+		select {
+		case v, ok := <-ch:
+			if ok {
+				s += fmt.Sprint("", v)
+			} else {
+				return s
+			}
+		}
+	}
 }
 
 func runSelectExample() {
@@ -70,4 +193,13 @@ func shootBoomerang(speed int, name string) {
 	fmt.Println(name, "Swaaaaa!")
 	time.Sleep(time.Millisecond * time.Duration(speed))
 	fmt.Println(name, "Swooop!")
+}
+
+func IsClosed(c chan int) bool {
+	select {
+	case <-c:
+		return true
+	default:
+	}
+	return false
 }
