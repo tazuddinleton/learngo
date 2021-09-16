@@ -12,11 +12,15 @@ import (
 )
 
 func main() {
-	webCrawlerWithMutex()
+	t1 := tree.New(1)
+	t2 := tree.New(1)
+
+	s := Same(t1, t2)
+	fmt.Println(s)
 }
 
 func webCrawlerWithMutex() {
-	Crawl("https://golang.org/", 4, UrlFetcher{
+	Crawl("https://golang.org/", 4, &UrlFetcher{
 		mu:      sync.Mutex{},
 		visited: map[string]*FetchResult{},
 	})
@@ -55,7 +59,7 @@ type FetchResult struct {
 	urls []string
 }
 
-func (f UrlFetcher) Fetch(url string) (body string, urls []string, err error) {
+func (f *UrlFetcher) Fetch(url string) (body string, urls []string, err error) {
 	f.mu.Lock()
 	_, ok := f.visited[url]
 	f.mu.Unlock()
@@ -84,21 +88,25 @@ func (f UrlFetcher) Fetch(url string) (body string, urls []string, err error) {
 	return
 }
 
-//
-//
-
-// todo: fix channel closing issue
 func binTreeExample() {
 	t := tree.New(1)
 	ch := make(chan int)
-	go Walk(t, ch)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		Walk(t, ch)
+		wg.Done()
+	}()
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
 	for v := range ch {
 		fmt.Println(v)
 	}
 }
 
 func Walk(t *tree.Tree, ch chan int) {
-
 	if t.Left != nil {
 		Walk(t.Left, ch)
 	}
@@ -115,21 +123,26 @@ func Same(t1, t2 *tree.Tree) bool {
 	s2 := Collect(t2)
 	return s1 == s2
 }
+
 func Collect(t *tree.Tree) string {
 	ch := make(chan int)
-	s := ""
-	Walk(t, ch)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-	for {
-		select {
-		case v, ok := <-ch:
-			if ok {
-				s += fmt.Sprint("", v)
-			} else {
-				return s
-			}
-		}
+	go func() {
+		Walk(t, ch)
+		wg.Done()
+	}()
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	s := ""
+	for v := range ch {
+		s += fmt.Sprint(v)
 	}
+	return s
 }
 
 func runSelectExample() {
