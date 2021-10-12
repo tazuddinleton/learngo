@@ -1,5 +1,4 @@
 //Golang arrays are demonstrated here through numerous examples
-
 package arrays
 
 import (

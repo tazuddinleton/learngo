@@ -1,7 +1,4 @@
-/**
-Errors package shows examples of errors in golang
-*/
-
+//Errors package shows examples of errors in golang
 package errors
 
 import (
