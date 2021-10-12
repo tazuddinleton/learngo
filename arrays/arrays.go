@@ -6,10 +6,11 @@ import (
 	"strings"
 )
 
-// Run runs all examples of current package
 func line() {
 	fmt.Println("--------------------------------------")
 }
+
+// Run runs all examples of current package
 func Run() {
 	fmt.Println(">>\nPackage arrays")
 	var funcWithoutArgs []func()

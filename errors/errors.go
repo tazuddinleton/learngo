@@ -9,6 +9,7 @@ import (
 
 // Run runs all the examples of current package
 func Run() {
+	fmt.Println(">>\nPackage errors")
 	i, err := DoubleIt(10)
 
 	if err != nil {
