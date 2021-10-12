@@ -11,6 +11,7 @@ func line() {
 	fmt.Println("--------------------------------------")
 }
 func Run() {
+	fmt.Println(">>\nPackage arrays")
 	var funcWithoutArgs []func()
 	funcWithoutArgs = append(funcWithoutArgs, Basics, Slice, MakeSlice, TicTacToeBoard, AppendToSlice, SliceRange)
 	for _, fn := range funcWithoutArgs {
