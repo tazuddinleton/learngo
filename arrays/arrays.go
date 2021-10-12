@@ -6,11 +6,13 @@ import (
 	"strings"
 )
 
-// Run runs all examples of current package
 func line() {
 	fmt.Println("--------------------------------------")
 }
+
+// Run runs all examples of current package
 func Run() {
+	fmt.Println(">>\nPackage arrays")
 	var funcWithoutArgs []func()
 	funcWithoutArgs = append(funcWithoutArgs, Basics, Slice, MakeSlice, TicTacToeBoard, AppendToSlice, SliceRange)
 	for _, fn := range funcWithoutArgs {
