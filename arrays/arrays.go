@@ -1,6 +1,4 @@
-/*
- * Golang arrays are demonstrated here through numerous examples
- */
+//Golang arrays are demonstrated here through numerous examples
 
 package arrays
 
