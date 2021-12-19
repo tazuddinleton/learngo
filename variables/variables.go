@@ -6,6 +6,7 @@ import (
 )
 
 func Run() {
+	fmt.Println(">>\nPackage variables")
 	var a = "hello"
 	var b = "world"
 	c := a + " " + b
@@ -74,7 +75,6 @@ func Run() {
 
 	print(BigInt>>38, SmallInt)
 }
-
 
 func print(a ...interface{}) {
 	fmt.Println(a...)
