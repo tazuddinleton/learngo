@@ -1,6 +1,6 @@
 module github.com/tazuddinleton/learngo
 
-go 1.17
+go 1.18
 
 require (
 	github.com/yuin/goldmark v1.4.0 // indirect
