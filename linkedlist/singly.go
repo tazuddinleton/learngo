@@ -65,7 +65,7 @@ func Drop[T any](l *List[T], n int) *List[T] {
 // DropWhile deletes items while a condition is true
 func DropWhile[T any](l *List[T], f func(t T) bool) *List[T] {
 	if f(l.head) {
-		return DropWhile(Drop(l, 1), f)
+		return DropWhile(l.tail, f)
 	}
 	return l
 }
