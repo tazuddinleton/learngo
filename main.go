@@ -1,7 +1,5 @@
 package main
 
-import "github.com/tazuddinleton/learngo/generics"
-
 func main() {
 	// rn := []func(){}
 	// rn = append(rn, arrays.Run, err.Run, fn.Run, variables.Run)
@@ -10,7 +8,4 @@ func main() {
 	// 	fmt.Println("")
 	// 	f()
 	// }
-
-	generics.RunNonGenericSum()
-	generics.RunGenericSum()
 }
