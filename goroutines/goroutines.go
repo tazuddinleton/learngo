@@ -3,10 +3,11 @@ package goroutines
 import (
 	"fmt"
 	"io/ioutil"
-	"learngo/tree"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/tazuddinleton/learngo/tree"
 
 	"mvdan.cc/xurls/v2"
 )
