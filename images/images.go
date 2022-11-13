@@ -1,5 +1,10 @@
 package images
 
+import (
+	"image"
+	"image/color"
+)
+
 type Image struct {
 	w, h int
 }
