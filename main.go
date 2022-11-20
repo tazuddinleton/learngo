@@ -11,5 +11,6 @@ func main() {
 	// 	f()
 	// }
 
-	channel.Run()
+	channel.RelayRace()
+
 }
